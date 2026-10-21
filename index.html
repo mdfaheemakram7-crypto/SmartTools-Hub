@@ -1,0 +1,714 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartTools Hub - Free online text tools, calculator and image resizer.">
+  <title>SmartTools Hub | Free Online Tools</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --primary: #635bff;
+      --dark: #172033;
+      --muted: #667085;
+      --background: #f5f7ff;
+      --card: #ffffff;
+      --border: #e5e7ef;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--dark);
+      background: var(--background);
+      line-height: 1.6;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .navbar {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 16px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--dark);
+      font-weight: 600;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 55px 20px 35px;
+    }
+
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 48px);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 span {
+      color: var(--primary);
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 600px;
+      margin: auto;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: auto;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 500px;
+      display: block;
+      margin: 25px auto 35px;
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: white;
+      outline-color: var(--primary);
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      padding-bottom: 50px;
+    }
+
+    .tool-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 5px 20px #17203308;
+      min-width: 0;
+    }
+
+    .tool-card h2 {
+      font-size: 21px;
+      margin-bottom: 5px;
+    }
+
+    .tool-card .description {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    textarea, input[type="number"], select {
+      width: 100%;
+      border: 1px solid #d9deea;
+      border-radius: 9px;
+      padding: 11px;
+      margin: 7px 0 12px;
+      background: white;
+      outline-color: var(--primary);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 10px 14px;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      filter: brightness(.93);
+    }
+
+    .btn.secondary {
+      color: var(--dark);
+      background: #eef0ff;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .stat {
+      background: #f5f6ff;
+      padding: 12px 5px;
+      border-radius: 10px;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 21px;
+      color: var(--primary);
+    }
+
+    .stat span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .calc-display {
+      background: #f5f6ff;
+      border-radius: 10px;
+      padding: 16px;
+      margin: 10px 0;
+      font-size: 26px;
+      font-weight: bold;
+      overflow-wrap: anywhere;
+      min-height: 65px;
+    }
+
+    .image-preview {
+      max-width: 100%;
+      max-height: 220px;
+      object-fit: contain;
+      display: none;
+      margin: 15px auto;
+      border-radius: 8px;
+    }
+
+    .status {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .empty-message {
+      display: none;
+      text-align: center;
+      color: var(--muted);
+      padding: 25px;
+      grid-column: 1 / -1;
+    }
+
+    footer {
+      background: white;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 25px 15px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 650px) {
+      .tools-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 38px;
+      }
+
+      .tool-card {
+        padding: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">⚡ SmartTools Hub</div>
+    <a class="nav-link" href="#tools">Explore Tools ↓</a>
+  </header>
+
+  <section class="hero">
+    <h1>Simple Tools.<br><span>Smarter Work.</span></h1>
+    <p>
+      Free online tools to count words, format text,
+      calculate numbers and resize images.
+    </p>
+  </section>
+
+  <main class="container" id="tools">
+    <input
+      id="searchTools"
+      class="search-box"
+      type="search"
+      placeholder="🔍 Search tools..."
+      aria-label="Search tools"
+    >
+
+    <div class="tools-grid" id="toolsGrid">
+
+      <!-- TOOL 1: WORD COUNTER -->
+      <section class="tool-card" data-search="word counter text characters sentences">
+        <h2>📝 Word Counter</h2>
+        <p class="description">Words, characters aur sentences count karein.</p>
+
+        <textarea id="wordInput" placeholder="Yahan apna text likhein..."></textarea>
+
+        <div class="stats">
+          <div class="stat">
+            <strong id="words">0</strong>
+            <span>Words</span>
+          </div>
+          <div class="stat">
+            <strong id="characters">0</strong>
+            <span>Characters</span>
+          </div>
+          <div class="stat">
+            <strong id="sentences">0</strong>
+            <span>Sentences</span>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button class="btn" id="copyText">Copy Text</button>
+          <button class="btn secondary" id="clearText">Clear</button>
+        </div>
+        <p class="status" id="wordStatus" aria-live="polite"></p>
+      </section>
+
+      <!-- TOOL 2: TEXT FORMATTER -->
+      <section class="tool-card" data-search="text formatter uppercase lowercase title case">
+        <h2>🔤 Text Formatter</h2>
+        <p class="description">Text ko apne hisaab se format karein.</p>
+
+        <textarea id="formatInput" placeholder="Apna text yahan likhein..."></textarea>
+
+        <div class="button-row">
+          <button class="btn" data-format="upper">UPPERCASE</button>
+          <button class="btn secondary" data-format="lower">lowercase</button>
+          <button class="btn secondary" data-format="title">Title Case</button>
+          <button class="btn secondary" data-format="trim">Extra Spaces</button>
+        </div>
+
+        <div class="button-row">
+          <button class="btn" id="copyFormat">Copy Result</button>
+          <button class="btn secondary" id="clearFormat">Clear</button>
+        </div>
+        <p class="status" id="formatStatus" aria-live="polite"></p>
+      </section>
+
+      <!-- TOOL 3: CALCULATOR -->
+      <section class="tool-card" data-search="calculator maths addition subtraction multiplication division">
+        <h2>🧮 Calculator</h2>
+        <p class="description">Do numbers ke beech calculation karein.</p>
+
+        <label for="numA">First number</label>
+        <input type="number" id="numA" placeholder="Jaise 25" step="any">
+
+        <label for="operation">Operation</label>
+        <select id="operation">
+          <option value="add">Addition (+)</option>
+          <option value="subtract">Subtraction (−)</option>
+          <option value="multiply">Multiplication (×)</option>
+          <option value="divide">Division (÷)</option>
+          <option value="modulo">Remainder (%)</option>
+        </select>
+
+        <label for="numB">Second number</label>
+        <input type="number" id="numB" placeholder="Jaise 5" step="any">
+
+        <button class="btn" id="calculate">Calculate</button>
+
+        <div class="calc-display" id="calcResult" aria-live="polite">Result: —</div>
+        <p class="status" id="calcStatus"></p>
+      </section>
+
+      <!-- TOOL 4: IMAGE RESIZER -->
+      <section class="tool-card" data-search="image resizer photo resize image size png jpeg">
+        <h2>🖼️ Image Resizer</h2>
+        <p class="description">Image ki dimensions badlein aur download karein.</p>
+
+        <label for="imageFile">Choose an image</label>
+        <input type="file" id="imageFile" accept="image/*">
+
+        <img id="imagePreview" class="image-preview" alt="Selected image preview">
+
+        <label for="imageWidth">New width (pixels)</label>
+        <input type="number" id="imageWidth" min="1" max="10000" placeholder="Jaise 800">
+
+        <label for="imageHeight">New height (pixels)</label>
+        <input type="number" id="imageHeight" min="1" max="10000" placeholder="Jaise 600">
+
+        <label for="imageFormat">Output format</label>
+        <select id="imageFormat">
+          <option value="image/png">PNG</option>
+          <option value="image/jpeg">JPEG</option>
+          <option value="image/webp">WebP</option>
+        </select>
+
+        <div class="button-row">
+          <button class="btn" id="resizeImage">Resize & Download</button>
+        </div>
+
+        <p class="status" id="imageStatus" aria-live="polite">
+          Image aapke browser mein process hogi.
+        </p>
+      </section>
+
+      <p class="empty-message" id="emptyMessage">Koi matching tool nahi mila.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p>© <span id="year"></span> SmartTools Hub</p>
+    <p>Free tools for everyday work.</p>
+  </footer>
+
+  <script>
+    // Footer year
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    // TOOL 1: WORD COUNTER
+    const wordInput = document.getElementById("wordInput");
+
+    function updateWordStats() {
+      const text = wordInput.value;
+      const trimmed = text.trim();
+
+      document.getElementById("words").textContent =
+        trimmed ? trimmed.split(/\s+/u).length : 0;
+
+      document.getElementById("characters").textContent =
+        text.length;
+
+      const sentenceList = trimmed.match(/[^.!?]+[.!?]+|[^.!?]+$/gu);
+      document.getElementById("sentences").textContent =
+        sentenceList ? sentenceList.filter(s => s.trim()).length : 0;
+    }
+
+    wordInput.addEventListener("input", updateWordStats);
+
+    document.getElementById("copyText").addEventListener("click", async () => {
+      const status = document.getElementById("wordStatus");
+
+      if (!wordInput.value) {
+        status.textContent = "Pehle kuch text likhein.";
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(wordInput.value);
+        status.textContent = "Text copied successfully!";
+      } catch {
+        wordInput.focus();
+        wordInput.select();
+        status.textContent = "Text select ho gaya hai. Ctrl+C dabayein.";
+      }
+    });
+
+    document.getElementById("clearText").addEventListener("click", () => {
+      wordInput.value = "";
+      updateWordStats();
+      document.getElementById("wordStatus").textContent = "";
+    });
+
+    // TOOL 2: TEXT FORMATTER
+    const formatInput = document.getElementById("formatInput");
+
+    document.querySelectorAll("[data-format]").forEach(button => {
+      button.addEventListener("click", () => {
+        const mode = button.dataset.format;
+        let text = formatInput.value;
+
+        if (mode === "upper") {
+          text = text.toUpperCase();
+        } else if (mode === "lower") {
+          text = text.toLowerCase();
+        } else if (mode === "title") {
+          text = text.toLowerCase().replace(
+            /(^|[\s-])([a-z])/g,
+            (_, separator, letter) => separator + letter.toUpperCase()
+          );
+        } else if (mode === "trim") {
+          text = text.trim().replace(/\s+/g, " ");
+        }
+
+        formatInput.value = text;
+        document.getElementById("formatStatus").textContent =
+          "Formatting complete!";
+      });
+    });
+
+    document.getElementById("copyFormat").addEventListener("click", async () => {
+      const status = document.getElementById("formatStatus");
+
+      if (!formatInput.value) {
+        status.textContent = "Pehle kuch text likhein.";
+        return;
+      }
+
+      try {
+        await navigator.clipboard.writeText(formatInput.value);
+        status.textContent = "Formatted text copied!";
+      } catch {
+        formatInput.focus();
+        formatInput.select();
+        status.textContent = "Text select ho gaya hai. Ctrl+C dabayein.";
+      }
+    });
+
+    document.getElementById("clearFormat").addEventListener("click", () => {
+      formatInput.value = "";
+      document.getElementById("formatStatus").textContent = "";
+    });
+
+    // TOOL 3: CALCULATOR
+    document.getElementById("calculate").addEventListener("click", () => {
+      const aField = document.getElementById("numA");
+      const bField = document.getElementById("numB");
+      const operation = document.getElementById("operation").value;
+      const resultBox = document.getElementById("calcResult");
+      const status = document.getElementById("calcStatus");
+
+      if (aField.value.trim() === "" || bField.value.trim() === "") {
+        resultBox.textContent = "Result: —";
+        status.textContent = "Dono numbers enter karein.";
+        return;
+      }
+
+      const a = Number(aField.value);
+      const b = Number(bField.value);
+      let result;
+
+      if (!Number.isFinite(a) || !Number.isFinite(b)) {
+        status.textContent = "Valid numbers enter karein.";
+        return;
+      }
+
+      switch (operation) {
+        case "add":
+          result = a + b;
+          break;
+        case "subtract":
+          result = a - b;
+          break;
+        case "multiply":
+          result = a * b;
+          break;
+        case "divide":
+          if (b === 0) {
+            resultBox.textContent = "Result: —";
+            status.textContent = "Zero se divide nahi kar sakte.";
+            return;
+          }
+          result = a / b;
+          break;
+        case "modulo":
+          if (b === 0) {
+            resultBox.textContent = "Result: —";
+            status.textContent = "Zero se remainder calculate nahi kar sakte.";
+            return;
+          }
+          result = a % b;
+          break;
+      }
+
+      resultBox.textContent = "Result: " + result;
+      status.textContent = Number.isFinite(result)
+        ? "Calculation successful!"
+        : "Result bahut bada hai ya valid nahi hai.";
+    });
+
+    // TOOL 4: IMAGE RESIZER
+    const imageFile = document.getElementById("imageFile");
+    const imagePreview = document.getElementById("imagePreview");
+    const imageWidth = document.getElementById("imageWidth");
+    const imageHeight = document.getElementById("imageHeight");
+    const imageStatus = document.getElementById("imageStatus");
+
+    let loadedImage = null;
+    let originalWidth = 0;
+    let originalHeight = 0;
+    let imageURL = null;
+
+    imageFile.addEventListener("change", () => {
+      const file = imageFile.files[0];
+
+      loadedImage = null;
+
+      if (imageURL) {
+        URL.revokeObjectURL(imageURL);
+        imageURL = null;
+      }
+
+      if (!file) {
+        imagePreview.style.display = "none";
+        imageStatus.textContent = "Koi image select nahi hui.";
+        return;
+      }
+
+      if (!file.type.startsWith("image/")) {
+        imageStatus.textContent = "Please ek valid image select karein.";
+        imageFile.value = "";
+        return;
+      }
+
+      imageURL = URL.createObjectURL(file);
+      const img = new Image();
+
+      img.onload = () => {
+        loadedImage = img;
+        originalWidth = img.naturalWidth;
+        originalHeight = img.naturalHeight;
+
+        imagePreview.src = imageURL;
+        imagePreview.style.display = "block";
+
+        imageWidth.value = originalWidth;
+        imageHeight.value = originalHeight;
+
+        imageStatus.textContent =
+          `Original size: ${originalWidth} × ${originalHeight}px`;
+      };
+
+      img.onerror = () => {
+        imageStatus.textContent = "Image load nahi ho paayi.";
+        URL.revokeObjectURL(imageURL);
+        imageURL = null;
+      };
+
+      img.src = imageURL;
+    });
+
+    // Width change hone par aspect ratio maintain karein
+    imageWidth.addEventListener("input", () => {
+      const width = Number(imageWidth.value);
+
+      if (loadedImage && width > 0) {
+        imageHeight.value = Math.max(
+          1, Math.round(width * originalHeight / originalWidth)
+        );
+      }
+    });
+
+    // Height change hone par aspect ratio maintain karein
+    imageHeight.addEventListener("input", () => {
+      const height = Number(imageHeight.value);
+
+      if (loadedImage && height > 0) {
+        imageWidth.value = Math.max(
+          1, Math.round(height * originalWidth / originalHeight)
+        );
+      }
+    });
+
+    document.getElementById("resizeImage").addEventListener("click", () => {
+      if (!loadedImage) {
+        imageStatus.textContent = "Pehle ek image choose karein.";
+        return;
+      }
+
+      const width = Number(imageWidth.value);
+      const height = Number(imageHeight.value);
+
+      if (
+        !Number.isInteger(width) || !Number.isInteger(height) ||
+        width < 1 || height < 1 || width > 10000 || height > 10000
+      ) {
+        imageStatus.textContent =
+          "Width aur height 1 se 10000 pixels ke beech honi chahiye.";
+        return;
+      }
+
+      const format = document.getElementById("imageFormat").value;
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const context = canvas.getContext("2d");
+
+      if (format === "image/jpeg") {
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, width, height);
+      }
+
+      context.drawImage(loadedImage, 0, 0, width, height);
+
+      canvas.toBlob(blob => {
+        if (!blob) {
+          imageStatus.textContent = "Image export nahi ho paaya.";
+          return;
+        }
+
+        const downloadURL = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const extension = format === "image/jpeg" ? "jpg" :
+          format === "image/webp" ? "webp" : "png";
+
+        link.href = downloadURL;
+        link.download = `smarttools-resized.${extension}`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        setTimeout(() => URL.revokeObjectURL(downloadURL), 1000);
+        imageStatus.textContent =
+          `Image download shuru: ${width} × ${height}px`;
+      }, format, 0.92);
+    });
+
+    // TOOL SEARCH
+    const searchTools = document.getElementById("searchTools");
+    const toolCards = document.querySelectorAll(".tool-card");
+    const emptyMessage = document.getElementById("emptyMessage");
+
+    searchTools.addEventListener("input", () => {
+      const query = searchTools.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      toolCards.forEach(card => {
+        const searchableText =
+          (card.dataset.search + " " + card.innerText).toLowerCase();
+
+        const match = searchableText.includes(query);
+        card.style.display = match ? "" : "none";
+
+        if (match) visibleCount++;
+      });
+
+      emptyMessage.style.display = visibleCount === 0 ? "block" : "none";
+    });
+  </script>
+</body>
+</html>
